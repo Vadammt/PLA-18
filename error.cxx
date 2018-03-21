@@ -1,14 +1,14 @@
 /****************** error.cxx *************************/
-/* enth‰lt eine Reihe von Fehlertexten, die ¸ber ihre
-Nummer verwendet werden kˆnnen und jederzeit erweitert
-werden kˆnnen. 
+/* enth√§lt eine Reihe von Fehlertexten, die √ºber ihre
+Nummer verwendet werden k√∂nnen und jederzeit erweitert
+werden k√∂nnen. 
 
 Zur Ausgabe der Fehlertexte wird die Funktion 
 
 	error ( int nr) 
 
-verwendet, der die Fehlernummer zu ¸bergeben ist.
-Die Funktion error f¸hrt ein exit durch. 
+verwendet, der die Fehlernummer zu √ºbergeben ist.
+Die Funktion error f√ºhrt ein exit durch. 
 
 Alternativ kann die Funktion 
 
@@ -42,7 +42,7 @@ char * errtxt[]=
 /*8*/	"Wiederholung erwartet",
 /*9*/	"Falsche Benutzung eines Symbols in Statement",
 /*10*/	"Identifikator nicht deklariert",
-/*11*/	"Keine Zuweisungen an Konstante oder Prozedurnamen zul‰ssig",
+/*11*/	"Keine Zuweisungen an Konstante oder Prozedurnamen zul√§ssig",
 /*12*/	"Wertzuweisungsoperator ist ':=' ",
 /*13*/	"Nach call ist Identifikator erwartet ",
 /*14*/	"Konstante oder Variable in call nicht erlaubt",
@@ -55,19 +55,19 @@ char * errtxt[]=
 /*21*/	" ')' fehlt ",
 /*22*/	" Symbol nach Faktor nicht erlaubt",
 /*23*/	"Ausdruck darf nicht mit diesem Symbol beginnen",
-/*24*/	"Zahl zu groﬂ ",
-/*25*/	"Programm zu groﬂ",
+/*24*/	"Zahl zu gro√ü ",
+/*25*/	"Programm zu gro√ü",
 /*26*/	"Prozedurschachtelung zu tief",
 /*27*/	"kein Faktor: Name oder Konstante oder ( E) ",
 /*28*/	" Symboltabelle voll",
 /*29*/	"Lexemfeld voll",
 /*30*/	"Statement erwartet" ,
 /*31*/	"Korrektes Programmende fehlt",
-/*32*/	" unzul‰ssiges Eingabezeichen (Scanner)",
+/*32*/	" unzul√§ssiges Eingabezeichen (Scanner)",
 /*33*/   "Nach PROGRAM noch Symbole in Eingabedatei",
 /*34*/	"Identifikator doppelt deklariert",
 /*35*/	"Doppelpunkt erwartet",
-/*36*/	"Unzul‰ssiger Typ",
+/*36*/	"Unzul√§ssiger Typ",
 /*37*/  "Falsche Eintragsart in Symboltabelle",
 /*38*/	"Keine korrekte reelle Konstante ",
 /*39 */	" fi fehlt"

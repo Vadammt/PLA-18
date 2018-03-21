@@ -8,7 +8,7 @@
 #endif
 
 
-int lookahead;					/* lookahead enth‰lt n‰chsten EIngabetoken */     
+int lookahead;					/* lookahead enth√§lt n√§chsten EIngabetoken */     
  
 
 int exp(); 
@@ -22,8 +22,8 @@ int nextsymbol();
 
 Schnittstelle: 
 
-	bei Aufruf :			n‰chstes Eingabesymbol befindet sich in lookahead
-	bei korrektem Ende:		n‰chstes Eingabesymbol befindet sich in lookahead
+	bei Aufruf :			n√§chstes Eingabesymbol befindet sich in lookahead
+	bei korrektem Ende:		n√§chstes Eingabesymbol befindet sich in lookahead
 							
 
 
@@ -41,14 +41,14 @@ int factor()
 	trace<<"\n Zeile:"<< lineno<<"	Faktor";
 
 
-	switch(lookahead)	// je nach n‰chstem Eingabesymbol in lookahead 
+	switch(lookahead)	// je nach n√§chstem Eingabesymbol in lookahead 
 	{
 		case KLAUF:	/* Symbol '(' folgt --> (EXPRESSION) erwartet*/  
 					
 					lookahead=nextsymbol();
 					exp();
 					if(lookahead== KLZU)	
-						// korrekt ; n‰chstes Symbol lesen --> Ende 
+						// korrekt ; n√§chstes Symbol lesen --> Ende 
 						lookahead = nextsymbol();
 					else 
 						error(27); // kein Faktor 
@@ -82,7 +82,7 @@ int factor()
 						/* nicht gefunden --> Fehler: Id nicht deklariert*/ 
 						error(10);
 
-					else	// Id in ST gefunden ; Art pr¸fen 
+					else	// Id in ST gefunden ; Art pr√ºfen 
 
 						{kind = found->token;	// Art des ST-Eintrags 
 						
@@ -109,7 +109,7 @@ int factor()
 						
 						} // endswitch (kind) 
 					
-					   // n‰chstes Symbol lesen 
+					   // n√§chstes Symbol lesen 
 						
 				       lookahead=nextsymbol();
 				     }	// endif 
@@ -138,8 +138,8 @@ int factor()
 			TERM	::=		FACTOR  { '*' FACTOR |  '/' FACTOR }*
 			
 Schnittstelle: 
-	bei Aufruf :			n‰chstes Eingabesymbol befindet sich in lookahead
-	bei korrektem Ende:		n‰chstes Eingabesymbol befindet sich in lookahead
+	bei Aufruf :			n√§chstes Eingabesymbol befindet sich in lookahead
+	bei korrektem Ende:		n√§chstes Eingabesymbol befindet sich in lookahead
 							Typ des Terms ist Funktionswert
 
 */ 
@@ -158,7 +158,7 @@ int term()
 	while(lookahead == MULT || lookahead ==DIV)
 		// solange * oder / folgt, muss Factor kommen
 		
-		{// n‰chstes Symbol lesen 
+		{// n√§chstes Symbol lesen 
 		 lookahead=nextsymbol();
 			ret = factor(); 
 		
@@ -176,8 +176,8 @@ int term()
 			EXPRESSION	::=		TERM { '+' TERM |  '-' TERM}*
 			
 Schnittstelle: 
-	bei Aufruf :			n‰chstes Eingabesymbol befindet sich in lookahead
-	bei korrektem Ende:		n‰chstes Eingabesymbol befindet sich in lookahead
+	bei Aufruf :			n√§chstes Eingabesymbol befindet sich in lookahead
+	bei korrektem Ende:		n√§chstes Eingabesymbol befindet sich in lookahead
 							Funktionswert ist Typ des Ausdrucks
 */ 
 
@@ -193,11 +193,11 @@ int exp()
 	while (lookahead == PLUS || lookahead == MINUS )
 			// solange + oder - folgt, muss Term kommen
 
-		{// n‰chstes Symbol lesen 
+		{// n√§chstes Symbol lesen 
 		 lookahead=nextsymbol();
-		 // Term pr¸fen 
+		 // Term pr√ºfen 
 		 typ_right = term();
-		 // nach korrektem Ende wurde n‰chstes Symbol gelesen 
+		 // nach korrektem Ende wurde n√§chstes Symbol gelesen 
 		
 		}
 	return (0);
@@ -212,8 +212,8 @@ int exp()
 			CONDITION	::=		EXPRESSION  RELOP  EXPRESSION
 			
 Schnittstelle: 
-	bei Aufruf :			n‰chstes Eingabesymbol befindet sich in lookahead
-	bei korrektem Ende:		n‰chstes Eingabesymbol befindet sich in lookahead
+	bei Aufruf :			n√§chstes Eingabesymbol befindet sich in lookahead
+	bei korrektem Ende:		n√§chstes Eingabesymbol befindet sich in lookahead
 
 */ 
 
@@ -237,7 +237,7 @@ int condition()
 		case LT:
 		case LE:
 		case GT:
-		case GE:// n‰chstes Symbol lesen 
+		case GE:// n√§chstes Symbol lesen 
 				lookahead=nextsymbol();
 				// Ausdruck muss folgen 
 				typ_right = exp();
@@ -268,8 +268,8 @@ int condition()
 
 
 Schnittstelle: 
-	bei Aufruf :			n‰chstes Eingabesymbol befindet sich in lookahead
-	bei korrektem Ende:		n‰chstes Eingabesymbol befindet sich in lookahead
+	bei Aufruf :			n√§chstes Eingabesymbol befindet sich in lookahead
+	bei korrektem Ende:		n√§chstes Eingabesymbol befindet sich in lookahead
 
 */ 
 
@@ -284,7 +284,7 @@ void statement()
       trace<<"\n Zeile:"<< lineno<<"Statement";
 
 
-  // ‹berpr¸fung des aktuellen lex. Symbols
+  // √úberpr√ºfung des aktuellen lex. Symbols
 
   
   
@@ -329,9 +329,9 @@ nach folgender Syntax:
 
 
 Schnittstelle: 
-	bei Aufruf :			erkannt wurde das Schl¸sselwort procedure 
-							n‰chstes Eingabesymbol befindet sich in lookahead 
-	bei korrektem Ende:		n‰chstes Eingabesymbol befindet sich in lookahead
+	bei Aufruf :			erkannt wurde das Schl√ºsselwort procedure 
+							n√§chstes Eingabesymbol befindet sich in lookahead 
+	bei korrektem Ende:		n√§chstes Eingabesymbol befindet sich in lookahead
 
 */ 
 
@@ -389,9 +389,9 @@ nach folgender Syntax:
 			  
 				
 Schnittstelle: 
-	bei Aufruf :			erkannt wurde das Schl¸sselwort var 
-							n‰chstes Eingabesymbol befindet sich in lookahead
-	bei korrektem Ende:		n‰chstes Eingabesymbol befindet sich in lookahead
+	bei Aufruf :			erkannt wurde das Schl√ºsselwort var 
+							n√§chstes Eingabesymbol befindet sich in lookahead
+	bei korrektem Ende:		n√§chstes Eingabesymbol befindet sich in lookahead
 
 */ 
 
@@ -452,9 +452,9 @@ nach folgender Syntax:
 			  
 				
 Schnittstelle: 
-	bei Aufruf :			erkannt wurde das Schl¸sselwort const 
-							n‰chstes Eingabesymbol befindet sich in lookahead
-	bei korrektem Ende:		n‰chstes Eingabesymbol befindet sich in lookahead
+	bei Aufruf :			erkannt wurde das Schl√ºsselwort const 
+							n√§chstes Eingabesymbol befindet sich in lookahead
+	bei korrektem Ende:		n√§chstes Eingabesymbol befindet sich in lookahead
 
 */ 
 
@@ -516,16 +516,16 @@ return;		// end constdecl
 Der Parameter neusym ist ein Zeiger auf die Symboltabelle des zu 
 analysierenden Blockes 
 ===> 
-		‰ussersten (globalen)  Block:		firstsym 
-		bei Prozeduren:		Zeiger auf neu angelegte ST f¸r Prozedur 
+		√§ussersten (globalen)  Block:		firstsym 
+		bei Prozeduren:		Zeiger auf neu angelegte ST f√ºr Prozedur 
 		
 Zu Beginn muss der globale Zeiger actsym auf die neue ST gesetzt werden
 Vor Verlassen muss actsym wieder auf den vorigen Wert gesetzt werden
 
 				
 Schnittstelle: 
-	bei Aufruf :			n‰chstes Eingabesymbol befindet sich in lookahead
-	bei korrektem Ende:		n‰chstes Eingabesymbol befindet sich in lookahead
+	bei Aufruf :			n√§chstes Eingabesymbol befindet sich in lookahead
+	bei korrektem Ende:		n√§chstes Eingabesymbol befindet sich in lookahead
 
 
 */ 
@@ -560,7 +560,7 @@ void block(symtable * neusym)
 
 
 
-	// bei Blockende : Symboltabelle zur¸cksetzen 
+	// bei Blockende : Symboltabelle zur√ºcksetzen 
 	// actsym = Zeiger auf vorherige Symboltabelle
 	
 	
@@ -586,8 +586,8 @@ return;		// end block
 
 				
 Schnittstelle: 
-	bei Aufruf :			n‰chstes Eingabesymbol befindet sich in lookahead
-	bei korrektem Ende:		n‰chstes Eingabesymbol befindet sich in lookahead
+	bei Aufruf :			n√§chstes Eingabesymbol befindet sich in lookahead
+	bei korrektem Ende:		n√§chstes Eingabesymbol befindet sich in lookahead
 
 */ 
 
@@ -611,7 +611,7 @@ void program()
 
 	//  nach Block muss '$' folgen 
 	if (lookahead == PROGEND)
-		// n‰chstes Symbol lesen 
+		// n√§chstes Symbol lesen 
 		lookahead=nextsymbol();
 	  
 	else 

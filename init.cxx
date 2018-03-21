@@ -2,7 +2,7 @@
 
 
 
-/* Initialisierungen für Compiler PLA  
+/* Initialisierungen fÃ¼r Compiler PLA  
 
 		Stand Sommersemester 2018
 		
@@ -18,18 +18,18 @@
 #endif 
 
 
-ifstream fin;					/* Zu übersetzende Eingaben */ 
+ifstream fin;					/* Zu Ã¼bersetzende Eingaben */ 
 ofstream fout,					/* Ausgabedatei */
 	 ferr,					/* Fehlerausgaben */
-	 fsym,					/* Ausgabe für Symboltabelle */
-	 trace;					/* Ausgabe für Trace */
+	 fsym,					/* Ausgabe fÃ¼r Symboltabelle */
+	 trace;					/* Ausgabe fÃ¼r Trace */
 
 
 
 int tracesw;
 int level=0; 
 
-/***************** Initialisierungen durchführen ******************/ 
+/***************** Initialisierungen durchfÃ¼hren ******************/ 
 
 void initialize()
 { 
@@ -40,7 +40,7 @@ void initialize()
   cout <<"\n Name der Eingabedatei eingeben-->"; 
   cin >> filename; 
   
-  /* Eingabefile öffnen*/
+  /* Eingabefile Ã¶ffnen*/
   fin.open(filename, ios::in);  
     
  // fin.open( "pla_input", ios::in);  
@@ -48,7 +48,7 @@ void initialize()
  cout << "\n Name der Ausgabedatei eingeben-->"; 
  cin >> filename; 
 
-  /* Ausgabedatei öffnen */ 
+  /* Ausgabedatei Ã¶ffnen */ 
   fout.open(filename,ios::out);
   
   
@@ -61,7 +61,7 @@ void initialize()
  cout<<"\n Name der Fehlerdatei eingeben-->"; 
  cin >>  filename; 
   
-  /* Fehlerdatei öffnen */ 
+  /* Fehlerdatei Ã¶ffnen */ 
   ferr.open(filename,ios::out);
   
   
@@ -71,10 +71,10 @@ void initialize()
   
   
 
-  cout<<"\n Trace gewünscht ? (y/n): "; 
+  cout<<"\n Trace gewÃ¼nscht ? (y/n): "; 
   cin>> c;
   if ( c == 'y')                  
-     { /* Datei für Trace  öffnen */
+     { /* Datei fÃ¼r Trace  Ã¶ffnen */
        trace.open("trace.out",ios::out);
        tracesw = TRUE; 
       }
@@ -82,7 +82,7 @@ void initialize()
 
 
 
-	/* Datei für Symboltabellenausgabe öffnen */   	  
+	/* Datei fÃ¼r Symboltabellenausgabe Ã¶ffnen */   	  
 	
   fsym.open("symtable.out",ios::out);
   
@@ -98,7 +98,7 @@ void initialize()
 
 
 
-/************ Endebehandlung bei fehlerfreier Übersetzung  *****/
+/************ Endebehandlung bei fehlerfreier Ãœbersetzung  *****/
 /* zur Zeit nur Ausgabe der Symboltabelle */
 
 

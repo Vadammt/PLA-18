@@ -13,16 +13,16 @@ using namespace std;
 
 #define TRUE		1
 #define FALSE		0
-#define BSIZE		512			/* Puffergrösse */ 
-#define NONE		  -1		/* Vorbesetzung für num */ 
+#define BSIZE		512			/* PuffergrÃ¶sse */ 
+#define NONE		  -1		/* Vorbesetzung fÃ¼r num */ 
 #define EOS			 '\0'		/* End of String */
 
-#define NESTMAX		 10			/* Max. Schachtelungstiefe von Blöcken */ 
-#define STRMAX		999			/* Länge des Stringfeldes */
-#define SYMMAX		 20			/* Größe der Teil-Symboltabelle */
+#define NESTMAX		 10			/* Max. Schachtelungstiefe von BlÃ¶cken */ 
+#define STRMAX		999			/* LÃ¤nge des Stringfeldes */
+#define SYMMAX		 20			/* GrÃ¶ÃŸe der Teil-Symboltabelle */
 
 
-/* Definition der Codierung für Tokentypen */ 
+/* Definition der Codierung fÃ¼r Tokentypen */ 
 
 
 #define INTNUM	 	2561			/* Int-Konstante */ 
@@ -30,8 +30,8 @@ using namespace std;
 
 
 #define ID  		257			/* Identifikator */ 
-#define CONST 		258			/* Schlüsselwort const */
-#define VAR  		259			/* Schlüsselwort var */ 
+#define CONST 		258			/* SchlÃ¼sselwort const */
+#define VAR  		259			/* SchlÃ¼sselwort var */ 
 #define PROCEDURE	260			/* Procedure */
 #define CALL 		261			/* call */ 
 #define BEGIN 		262			/* begin */
@@ -67,7 +67,7 @@ using namespace std;
 
 
 
-/* Definition der Art der Symboltabellen-Einträge  */ 
+/* Definition der Art der Symboltabellen-EintrÃ¤ge  */ 
 
 
 #define KONST 		310			/* Konstanten-Eintrag */ 
@@ -107,11 +107,11 @@ struct st_entry
 
 
 struct symtable
-	{ symtable * precsym;			/* Zeiger auf übergeordnete Symboltabelle; 
+	{ symtable * precsym;			/* Zeiger auf Ã¼bergeordnete Symboltabelle; 
 										bei oberster NULL */
 	  int level;					/* Schachtelungstiefe  */
-	  int anzahl;					/* Anzahl der Symboltabelleneinträge */
-	  st_entry eintrag[SYMMAX];		/* Feld für Einträge */ 
+	  int anzahl;					/* Anzahl der SymboltabelleneintrÃ¤ge */
+	  st_entry eintrag[SYMMAX];		/* Feld fÃ¼r EintrÃ¤ge */ 
 	};
 
 
@@ -131,13 +131,13 @@ extern int lineno;				/* Zeilennummer */
 extern symtable *actsym,			/* Zeiger auf aktuelle Symboltabelle */
 		*firstsym;			/* Zeiger auf oberste (globale) Symboltabelle */ 
 
-extern int tracesw;					/* Kennung, ob Trace gewünscht */ 
+extern int tracesw;					/* Kennung, ob Trace gewÃ¼nscht */ 
 
 
 
 
 
-/******************** Prototypen für Prozeduren *******************/
+/******************** Prototypen fÃ¼r Prozeduren *******************/
 
 
 
@@ -149,7 +149,7 @@ void stop(); 						/* Beenden */
 void initlexan();					/* Scanner initialisieren */
 int lookforres( char * );			/* sucht in Tabelle der
 									   res. Symbole nach Zeichenkette */ 
-int nextsymbol(); 					/* liest nächstes Symbol der Eingabe */ 
+int nextsymbol(); 					/* liest nÃ¤chstes Symbol der Eingabe */ 
 					 
 
 
@@ -170,7 +170,7 @@ int term();						/* Verarbeiten eines Terms */
 int exp(); 						/* Verarbeiten eines Ausdrucks */ 
 int condition(); 					/* Verarbeiten einer Bedingung */ 
 void statement();					/* Verarbeiten Statement */ 
-void program(); 					/* Programm übersetzen */ 
+void program(); 					/* Programm Ã¼bersetzen */ 
 void block( symtable * neusym);		/* Bearbeiten eines Blockes */ 
 
 

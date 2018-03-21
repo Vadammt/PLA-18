@@ -26,7 +26,7 @@ int main()
 {
 	int lookahead = -1; 
 
-	/* Initialisierungen der lexikalischen Analyse durchführen */
+	/* Initialisierungen der lexikalischen Analyse durchfÃ¼hren */
 	initialize(); 
 
 	/* 1. Symbol lesen  */ 

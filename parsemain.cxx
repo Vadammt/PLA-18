@@ -10,7 +10,7 @@
 #endif 
 
 
-// Mainprogramm für Parser
+// Mainprogramm fÃ¼r Parser
 
 int main()
 {
