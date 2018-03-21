@@ -5,20 +5,9 @@ set(CMAKE_CXX_STANDARD 11)
 
 # Uebersetzung des Scanners aus Aufgabe 1
 project(lexmain)
-
-add_custom_target(lexmain COMMAND make lexmain
-        -C ${Scanner_SOURCE_DIR}
-        CLION_EXE_DIR=${PROJECT_BINARY_DIR})
-
+add_executable(lexmain lexmain.cxx init.cxx error.cxx lexan.cxx symbol.cxx parser.cxx global.h)
 
 
 # Uebersetzung des Parsers aus Aufgabe 1
 project(parsemain)
-
-add_custom_target(parsemain COMMAND make parsemain
-        -C ${Parser_SOURCE_DIR}
-        CLION_EXE_DIR=${PROJECT_BINARY_DIR})
-
-# For insight features
-project(UNUSED)
-add_executable(crap error.cxx global.h init.cxx lexan.cxx lexmain.cxx parsemain.cxx parser.cxx symbol.cxx)
+add_executable(parsemain parsemain.cxx init.cxx error.cxx lexan.cxx symbol.cxx parser.cxx global.h)
