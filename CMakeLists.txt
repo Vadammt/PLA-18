@@ -18,3 +18,7 @@ project(parsemain)
 add_custom_target(parsemain COMMAND make parsemain
         -C ${Parser_SOURCE_DIR}
         CLION_EXE_DIR=${PROJECT_BINARY_DIR})
+
+# For insight features
+project(UNUSED)
+add_executable(crap error.cxx global.h init.cxx lexan.cxx lexmain.cxx parsemain.cxx parser.cxx symbol.cxx)
