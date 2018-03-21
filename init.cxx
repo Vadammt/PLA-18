@@ -21,10 +21,10 @@
 
 
 ifstream fin;                    /* Zu übersetzende Eingaben */
-ofstream fout,                    /* Ausgabedatei */
-        ferr,                    /* Fehlerausgaben */
-        fsym,                    /* Ausgabe für Symboltabelle */
-        trace;                    /* Ausgabe für Trace */
+ofstream fout,                   /* Ausgabedatei */
+         ferr,                   /* Fehlerausgaben */
+         fsym,                   /* Ausgabe für Symboltabelle */
+         trace;                  /* Ausgabe für Trace */
 
 
 
@@ -35,60 +35,69 @@ int level = 0;
 
 void initialize()
 {
-    char c;
-    char filename[20];
+    string filename = "";
 
-
-    cout << "\n Name der Eingabedatei eingeben-->";
-    cin >> filename;
-
+    // Input file
+    //
+    cout << "\n Name der Eingabedatei eingeben: ";
+    getline(cin, filename);
 
     /* Eingabefile öffnen*/
     fin.open(filename, ios::in);
 
-    // fin.open( "pla_input", ios::in);
-
-    cout << "\n Name der Ausgabedatei eingeben-->";
-    cin >> filename;
+    // Output file
+    //
+    cout << "\n Name der Ausgabedatei eingeben (outputs.out): ";
+    getline(cin, filename);
+    if(filename.empty()) {
+        filename = "outputs.txt";       // Assign default value if filename not set.
+    }
 
     /* Ausgabedatei öffnen */
     fout.open(filename, ios::out);
-
-
-//  fout.open("pla_ou",ios::out);
-
     fout << "\n\n***************** Ausgabe ***************\n";
 
 
-    cout << "\n Name der Fehlerdatei eingeben-->";
-    cin >> filename;
+    // Error file
+    //
+    cout << "\n Name der Fehlerdatei eingeben (errors.out): ";
+    getline(cin, filename);
+    if(filename.empty()) {
+        filename = "errors.txt";       // Assign default value if filename not set.
+    }
 
     /* Fehlerdatei öffnen */
     ferr.open(filename, ios::out);
-
-
-//  ferr.open("err.txt",ios::out);
-
     ferr << "\n\n**************** Fehlermeldungen*************\n";
 
 
+    // Enable trace
+    //
     cout << "\n Trace gewünscht ? (y/n): ";
+    char c = 'n';
     cin >> c;
     if (c == 'y')
     { /* Datei für Trace  öffnen */
         trace.open("trace.out", ios::out);
         tracesw = TRUE;
+
+        cout << " Name der Tracedatei: trace.out \n";
     }
     else
-    { tracesw = FALSE; }
+    {
+        tracesw = FALSE;
+    }
 
 
+
+    // Symbol table file
+    //
 
     /* Datei für Symboltabellenausgabe öffnen */
-
     fsym.open("symtable.out", ios::out);
+    fsym << "\n\n**************** Symboltabellen *************\n";
 
-    fsym << "\n\n**************** Symboltabellen*************\n";
+    cout << "\n Name der Symboltabellen-Datei: symtable.out \n";
 
 
 
