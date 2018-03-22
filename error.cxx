@@ -31,7 +31,7 @@ verwendet werden, die den angegebenen Text ausgibt
 /***************** Fehlertexte **********************/
 
 
-char *errtxt[] =
+const char *errtxt[] =
 {
     /* 0*/   "Undefined Syntaxerror ",
     /* 1*/   "'='erwartet anstelle von ':=' ",
@@ -72,7 +72,7 @@ char *errtxt[] =
     /*36*/   "Unzulässiger Typ",
     /*37*/   "Falsche Eintragsart in Symboltabelle",
     /*38*/   "Keine korrekte reelle Konstante ",
-    /*39 */  " fi fehlt"
+    /*39*/  " fi fehlt"
 };
 
 
