@@ -26,11 +26,15 @@ char actchar;                       /* gelesenes Zeichen */
 
 
 /* Register functions */
+void readNextCharacter();
 int readNumber();
 int readIdentifcator();
+
+// Checkers
 bool isValidNumberTerminal(char c);
-bool isNumberTerminator(char c);
-void readNextCharacter();
+bool isValidIdentifierTerminal(char c);
+bool isLineBreak(char c);
+bool isWhiteSpace(char c);
 
 /*
 Um Bezeichner von reservierten Symbolene unterscheiden zu können,
@@ -61,20 +65,20 @@ struct ressw
  */
 struct ressw restable[] =
 {
-    "const", CONST,
-    "var", VAR,
+    "const",     CONST,
+    "var",       VAR,
     "procedure", PROCEDURE,
-    "call", CALL,
-    "begin", BEGIN,
-    "end", END,
-    "if", IF,
-    "then", THEN,
-    "else", ELSE,
-    "while", WHILE,
-    "do", DO,
-    "int", INT,
-    "real", REAL,
-    "fi", FI
+    "call",      CALL,
+    "begin",     BEGIN,
+    "end",       END,
+    "if",        IF,
+    "then",      THEN,
+    "else",      ELSE,
+    "while",     WHILE,
+    "do",        DO,
+    "int",       INT,
+    "real",      REAL,
+    "fi",        FI
 };
 
 
@@ -83,14 +87,14 @@ struct ressw restable[] =
  *
  * @return Sucht in Tabelle reservierter Worte nach s und liefert zugehörigen Token, sonst 0
  */
-int lookforres(char *s)
+int lookforres(const string &s)
 {
     struct ressw *ptr;
 
     for (ptr = restable; ptr < &restable[NORW]; ptr++)
     {
 
-        if (strcmp(ptr->ressymbol, s) == 0)
+        if (strcmp(ptr->ressymbol, s.c_str()) == 0)
         {
             /* Symbol gefunden */
             return (ptr->token);
@@ -188,7 +192,7 @@ int nextsymbol()
     while (!fin.eof())              /* Eingabe-Dateiende nicht erreicht */
     {
 
-        if (actchar == ' ' || actchar == '\t')
+        if (isWhiteSpace(actchar))
         {
             /* Blank und Tab in Ausgabedatei kopieren und überlesen */
             fout.put(actchar);
@@ -197,7 +201,7 @@ int nextsymbol()
         }
 
 
-        else if (actchar == '\n' || actchar == '\r')
+        else if (isLineBreak(actchar))
         {
             /* Newline in Ausgabedatei kopieren, überlesen/entfernen, Zeilennummer erhöhen */
             fout.put(actchar);
@@ -219,36 +223,97 @@ int nextsymbol()
         {
             /***** actchar ist Buchstabe -->  Identifikatoren erkennen ****/
 
-
-
-            int b = 0;                  /* Zeichenzahl */
-
-            /* reg. Ausdruck   letter (letter|digit)*  erkennen ==>
-                solange Buchstaben oder Ziffern folgen --> Identifikator */
-
             return readIdentifcator();
         }
 
-        /***** Sonderzeichen oder Operatoren erkennen ***************/
-
-
         else
         {
+            /***** Sonderzeichen oder Operatoren erkennen ***************/
+
             fout.put(actchar);          /* Zeichen in Ausgabedatei */
 
             switch (actchar)
             {
+
                 case '=':
                     readNextCharacter();
                     return (EQ);
 
+                case '!':
+                    readNextCharacter();
+                    if(actchar != '=') {
+                        errortext(const_cast<char *>("Inverting character '!' not defined; did you mean unequal '!=' ?"));
+                        return -1;
+                    }
+                    return (NE);
+
+                case '<':
+                    readNextCharacter();
+                    if(actchar == '=') {
+                        readNextCharacter();
+                        return(LE);
+                    }
+                    return (LT);
+
+                case '>':
+                    readNextCharacter();
+                    if(actchar == '=') {
+                        readNextCharacter();
+                        return(GE);
+                    }
+                    return (GT);
+
+                case ':':
+                    readNextCharacter();
+                    if(actchar == '=') {
+                        readNextCharacter();
+                        return (ASS);
+                    }
+                    return COLON;
+
+                case ',':
+                    readNextCharacter();
+                    return (KOMMA);
+
+                case ';':
+                    readNextCharacter();
+                    return (SEMICOLON);
+
+                case '+':
+                    readNextCharacter();
+                    return (PLUS);
+
+                case '-':
+                    readNextCharacter();
+                    return (MINUS);
+
+                case '*':
+                    readNextCharacter();
+                    return (MULT);
+
+                case '/':
+                    readNextCharacter();
+                    return (DIV);
+
+                case '(':
+                    readNextCharacter();
+                    return (KLAUF);
+
+                case ')':
+                    readNextCharacter();
+                    return (KLZU);
+
+                case '$':
+                    readNextCharacter();
+                    return (PROGEND);
 
                 default:
+                    // Cannot read character
                     error(32);
 
 
-            } /* end-switch */
-        } /* end-else */
+            }
+        }
 
 
     }/* end while */
@@ -258,6 +323,13 @@ int nextsymbol()
 
 }
 
+
+
+/**
+ *
+ * Read a NUMBER
+ *
+ */
 int readNumber() {
 
     /*
@@ -268,82 +340,106 @@ int readNumber() {
 
     string number = "";
 
-    bool isReal = false;
-    bool hasFractional = false;
-    while (isValidNumberTerminal(actchar))
-    {
+    int numIntDigits = 0;
+    bool isInteger = true;
+    int numRealDigits = 0;
+    while (isValidNumberTerminal(actchar)) {
         /* Write current character to output file */
         fout.put(actchar);
 
-        if(isdigit(actchar)) {
+        if (isdigit(actchar)) {
             // Append digit to number
             number += actchar;
 
             // Check if number is real
-            if(isReal) {
-                // Has (at least) one digit after delimiter
-                hasFractional = true;
+            if (isInteger) {
+                // Integer number -> increment int digits.
+                numIntDigits++;
+            } else {
+                // Real number -> increment floating digits.
+                numRealDigits++;
             }
-        }
-        else if(actchar == REAL_DELIMITER) {
+        } else if (actchar == REAL_DELIMITER) {
             // Switch INT to REAL
-            isReal = true;
+            isInteger = false;
 
             // Append delimiter to number
             number += actchar;
         }
-        else if(isNumberTerminator(actchar)){
-            // Number was completely read -> parse
 
-            if(!isReal) {
-                // Convert to int
-                num = atoi(number.c_str());
-                return INTNUM;
-            }
-            else {
-                // Error handling: Check if number has at least one fractional
-                if(!hasFractional) {
-                    errortext(const_cast<char *>("Incorrect floating number: Digit after <REAL_DELIMITER> missing."));
-                }
-
-                // Convert to real
-                realnum = atof(number.c_str());
-                return REALNUM;
-            }
-        }
-        else {
-            if(isalpha(actchar)) {
-                errortext(const_cast<char *>("Characters in Numbers not allowed! Identifiers must start with a letter."));
-            }
-
-            error(32);    /* 32 = " unzulässiges Eingabezeichen (Scanner)" */
-
-        }
-
-        // Read next
+        // Read next character into actchar
         readNextCharacter();
+    }
+
+    // Error detection
+    if(isalpha(actchar)) {
+        errortext(const_cast<char *>("Characters in Numbers not allowed! Identifiers must start with a letter."));
+    }
+
+    // Interpret read number
+    if(isInteger) {
+        // integer number
+
+        // Convert to int
+        num = atoi(number.c_str());
+        return INTNUM;
+    }
+    else {
+        // real number
+
+        // Error handling: Check if number has at least one fractional
+        if(numRealDigits == 0) {
+            errortext(const_cast<char *>("Incorrect floating number: Digit after <REAL_DELIMITER> missing."));
+        }
+
+        // Convert to real
+        realnum = atof(number.c_str());
+        return REALNUM;
     }
 }
 
 
+/**
+ *
+ * Rad an IDENT
+ *
+ */
 int readIdentifcator() {
-    return NULL;
-}
+    /*
+     * reg. Ausdruck   letter (letter|digit)*  erkennen ==>
+     * solange Buchstaben oder Ziffern folgen --> Identifikator
+     */
 
+    string identifier = "";
 
-/**
- * Is the character valid in a number
- */
-bool isValidNumberTerminal(char c) {
-    return isdigit(c) || c == REAL_DELIMITER;
-}
+    while (isValidIdentifierTerminal(actchar)) {
+        // append new character to identifier
+        identifier += actchar;
 
-/**
- * Valid end of a number.
- */
-bool isNumberTerminator(char c) {
-    // TODO implement me!
-    return true;
+        // Read next character into actchar
+        readNextCharacter();
+    }
+
+    // Interpret read identifier
+
+    // Error detection: Is identfier length > BSIZE
+    static const char* maxLengthError = ("Identifier length exceeds max size of " + to_string(BSIZE) + ".").c_str();
+    if(identifier.length() > BSIZE) {
+        errortext(const_cast<char *>(maxLengthError));
+    }
+
+    // Is identifier reserved
+    int reservedIdent = lookforres(identifier);
+    if(reservedIdent != 0) {
+        // Identifier is reserved
+        strcpy(idname, identifier.c_str());
+        return reservedIdent;
+    }
+    else {
+        // Identifier is a valid IDENT
+        strcpy(idname, identifier.c_str());
+        return ID;
+    }
 }
 
 /**
@@ -352,4 +448,30 @@ bool isNumberTerminator(char c) {
 void readNextCharacter()
 {
     fin.get(actchar);
+}
+
+
+/**
+ * Is the character valid in a number
+ */
+bool isValidNumberTerminal(char c) {
+    return isdigit(c)
+        || c == REAL_DELIMITER;
+}
+
+/**
+ * Is the character valid in an identifier
+ */
+bool isValidIdentifierTerminal(char c) {
+    return isdigit(c)
+        || isalpha(c);
+}
+
+bool isLineBreak(char c) {
+    return c == '\n'
+        || c == '\r';
+}
+
+bool isWhiteSpace(char c) {
+    return isspace(c);
 }
