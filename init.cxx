@@ -36,7 +36,7 @@ int level = 0;
 
 void initialize()
 {
-    string filename = "";
+    string filename = "/mnt/c/Users/Simon/Development/Compiler-A1/tests/lex_num.tst";
 
     // Input file
     //
@@ -59,7 +59,7 @@ void initialize()
     cout << "\n Name der Ausgabedatei eingeben (outputs.out): ";
     getline(cin, filename);
     if(filename.empty()) {
-        filename = "outputs.txt";       // Assign default value if filename not set.
+        filename = "outputs.out";       // Assign default value if filename not set.
     }
 
     /* Ausgabedatei öffnen */
@@ -72,7 +72,7 @@ void initialize()
     cout << "\n Name der Fehlerdatei eingeben (errors.out): ";
     getline(cin, filename);
     if(filename.empty()) {
-        filename = "errors.txt";       // Assign default value if filename not set.
+        filename = "errors.out";       // Assign default value if filename not set.
     }
 
     /* Fehlerdatei öffnen */
