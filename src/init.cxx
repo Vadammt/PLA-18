@@ -41,7 +41,12 @@ void initialize()
     // Input file
     //
     cout << "\n Name der Eingabedatei eingeben: ";
-    getline(cin, filename);
+    if(filename.empty()) {
+        getline(cin, filename);
+    }
+    else {
+        cout << filename << endl;
+    }
 
     /* Eingabefile öffnen*/
     if( access(filename.c_str(), F_OK ) != -1 ) {
