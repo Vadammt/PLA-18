@@ -15,6 +15,7 @@
 
 #ifndef GLOBAL_H
 
+#include <unistd.h>
 #include "global.h"
 
 #endif
