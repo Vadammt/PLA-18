@@ -303,7 +303,7 @@ int readNumber() {
             else {
                 // Error handling: Check if number has at least one fractional
                 if(!hasFractional) {
-                    errortext("Fehlerhafte Gleitkommazahl: Ziffer nach <REAL_DELIMITER> fehlt.");
+                    errortext(const_cast<char *>("Incorrect floating number: Digit after <REAL_DELIMITER> missing."));
                 }
 
                 // Convert to real
@@ -313,10 +313,9 @@ int readNumber() {
         }
         else {
             if(isalpha(actchar)) {
-                errortext("Characters in Numbers not allowed! Did you mean an identifier? Identifiers must not start with a digit.");
+                errortext(const_cast<char *>("Characters in Numbers not allowed! Identifiers must start with a letter."));
             }
 
-            // TODO Maybe handle character as identifier?
             error(32);    /* 32 = " unzulässiges Eingabezeichen (Scanner)" */
 
         }
@@ -354,4 +353,3 @@ void readNextCharacter()
 {
     fin.get(actchar);
 }
-
