@@ -128,7 +128,7 @@ void initlexan()
     realnum = 0.0;
     idname[0] = '\0';
     lineno = 1;
-    readNextCharacter();            /* Erstes Zeichen der Eingabe lesen */
+    fin.get(actchar);            /* Erstes Zeichen der Eingabe lesen */
 
 }
 
@@ -195,7 +195,6 @@ int nextsymbol()
         if (isWhiteSpace(actchar))
         {
             /* Blank und Tab in Ausgabedatei kopieren und überlesen */
-            fout.put(actchar);
             readNextCharacter();
 
         }
@@ -204,7 +203,6 @@ int nextsymbol()
         else if (isLineBreak(actchar))
         {
             /* Newline in Ausgabedatei kopieren, überlesen/entfernen, Zeilennummer erhöhen */
-            fout.put(actchar);
             readNextCharacter();
             lineno++;
         }
@@ -230,8 +228,6 @@ int nextsymbol()
         {
             /***** Sonderzeichen oder Operatoren erkennen ***************/
 
-            fout.put(actchar);          /* Zeichen in Ausgabedatei */
-
             switch (actchar)
             {
 
@@ -241,11 +237,14 @@ int nextsymbol()
 
                 case '!':
                     readNextCharacter();
-                    if(actchar != '=') {
+                    if(actchar == '=') {
+                        readNextCharacter();
+                        return (NE);
+                    }
+                    else {
                         errortext(const_cast<char *>("Inverting character '!' not defined; did you mean unequal '!=' ?"));
                         return -1;
                     }
-                    return (NE);
 
                 case '<':
                     readNextCharacter();
@@ -344,8 +343,6 @@ int readNumber() {
     bool isInteger = true;
     int numRealDigits = 0;
     while (isValidNumberTerminal(actchar)) {
-        /* Write current character to output file */
-        fout.put(actchar);
 
         if (isdigit(actchar)) {
             // Append digit to number
@@ -447,6 +444,10 @@ int readIdentifcator() {
  */
 void readNextCharacter()
 {
+    /* Write current character to output file */
+    fout.put(actchar);
+
+    /* Read next character */
     fin.get(actchar);
 }
 
