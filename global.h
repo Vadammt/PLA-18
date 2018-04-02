@@ -64,7 +64,7 @@ using namespace std;
 #define FI               291        /* fi */
 
 
-    #define DONE         300        /* Ende-Token */
+#define DONE             300        /* Ende-Token */
 
 
 
