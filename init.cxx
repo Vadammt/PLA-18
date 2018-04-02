@@ -43,7 +43,15 @@ void initialize()
     getline(cin, filename);
 
     /* Eingabefile öffnen*/
-    fin.open(filename, ios::in);
+    if( access(filename.c_str(), F_OK ) != -1 ) {
+        // File exists
+        fin.open(filename, ios::in);
+    }
+    else {
+        // File does not exist
+        cout << "\n   ERROR: Input file not found! \n";
+        exit(-1);
+    }
 
     // Output file
     //
@@ -73,10 +81,10 @@ void initialize()
 
     // Enable trace
     //
-    cout << "\n Trace gewünscht ? (y/n): ";
-    char c = 'n';
-    cin >> c;
-    if (c == 'y')
+    cout << "\n Trace gewünscht ? (y/N): ";
+    string c = "n";
+    getline(cin, c);
+    if (c == "y")
     { /* Datei für Trace  öffnen */
         trace.open("trace.out", ios::out);
         tracesw = TRUE;
