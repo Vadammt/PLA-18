@@ -36,7 +36,7 @@ int level = 0;
 
 void initialize()
 {
-    string filename = "/mnt/c/Users/Simon/Development/Compiler-A1/tests/lex_num.tst";
+    string filename = "";
 
     // Input file
     //
