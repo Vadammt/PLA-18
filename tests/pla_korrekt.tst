@@ -10,13 +10,13 @@
 						f := f +  k * 1.0;
 						f := 1.0; 
 						if i = 0
-							then i := 1;
+							then i := 1  fi; 
 						i := i+1
 					 end
 		end;
 		
 	begin
-	
+		
 		n := c;
 		call test
 	end$
