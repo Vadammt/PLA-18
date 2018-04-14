@@ -340,7 +340,7 @@ int readNumber() {
     string number = "";
 
     int numIntDigits = 0;
-    bool isInteger = true;
+    bool isReal = true;
     int numRealDigits = 0;
     while (isValidNumberTerminal(actchar)) {
 
@@ -349,7 +349,7 @@ int readNumber() {
             number += actchar;
 
             // Check if number is real
-            if (isInteger) {
+            if (!isReal) {
                 // Integer number -> increment int digits.
                 numIntDigits++;
             } else {
@@ -357,8 +357,12 @@ int readNumber() {
                 numRealDigits++;
             }
         } else if (actchar == REAL_DELIMITER) {
+            if(isReal && numRealDigits == 0) {
+                errortext("Double dots -> Number has no fractional digit.");
+            }
+
             // Switch INT to REAL
-            isInteger = false;
+            isReal = true;
 
             // Append delimiter to number
             number += actchar;
@@ -374,7 +378,7 @@ int readNumber() {
     }
 
     // Interpret read number
-    if(isInteger) {
+    if(!isReal) {
         // integer number
 
         // Convert to int
