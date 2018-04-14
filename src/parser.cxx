@@ -10,8 +10,10 @@
 #endif
 
 
-int lookahead;                    /* lookahead enthält nächsten EIngabetoken */
-
+/**
+ * lookahead enthält nächsten Eingabetoken
+ */
+int lookahead;
 
 int exp();
 
@@ -32,9 +34,6 @@ Schnittstelle:
 
 
 */
-
-
-
 int factor()
 {
     int kind;
@@ -152,8 +151,6 @@ Schnittstelle:
 							Typ des Terms ist Funktionswert
 
 */
-
-
 int term()
 {
     int ret;
@@ -192,7 +189,6 @@ Schnittstelle:
 	bei korrektem Ende:		nächstes Eingabesymbol befindet sich in lookahead
 							Funktionswert ist Typ des Ausdrucks
 */
-
 int exp()
 {
     int typ_left, typ_right;
@@ -230,7 +226,6 @@ Schnittstelle:
 	bei korrektem Ende:		nächstes Eingabesymbol befindet sich in lookahead
 
 */
-
 int condition()
 {
     int typ_left, typ_right;
@@ -290,9 +285,6 @@ Schnittstelle:
 	bei korrektem Ende:		nächstes Eingabesymbol befindet sich in lookahead
 
 */
-
-
-
 void statement()
 {
     st_entry *found;        // Zeiger auf ST-Eintrag
@@ -354,9 +346,6 @@ Schnittstelle:
 	bei korrektem Ende:		nächstes Eingabesymbol befindet sich in lookahead
 
 */
-
-
-
 void procdecl()
 {
     st_entry *neu, *found;          // Zeiger auf ST-Eintrag
@@ -388,9 +377,6 @@ Schnittstelle:
 	bei korrektem Ende:		nächstes Eingabesymbol befindet sich in lookahead
 
 */
-
-
-
 void vardecl()
 {
     st_entry *neu, *found;
@@ -453,10 +439,6 @@ Schnittstelle:
 	bei korrektem Ende:		nächstes Eingabesymbol befindet sich in lookahead
 
 */
-
-
-
-
 void constdecl()
 {
     st_entry *neu, *found;
@@ -526,46 +508,46 @@ Schnittstelle:
 
 
 */
-
-
-
-
-void block(symtable *neusym)
-
-/* symtable * neusym :	Zeiger auf neue ST */
-
-
+void block(symtable *neuSymboltable)
 {
+    /* symtable *neuSymboltable :	Zeiger auf neue ST */
+
+
     if (tracesw)
     {
         trace << "\n Zeile:" << lineno << "Block";
     }
 
     // actsym auf neue Symboltabelle setzen
+    symtable *oldSymboltable = actsym;
+    actsym = neuSymboltable;
 
+    // Parse BLOCK
 
+    // Check if there is a CONSTDECL
+    if(lookahead == CONST) {
+        // There is at least one CONSTDECL (constant declaration)
+        constdecl();
+    }
 
+    // Check if there is a VARDECL
+    if(lookahead == VAR) {
+        // There is at least one CONSTDECL (constant declaration)
+        vardecl();
+    }
 
+    // Check if there is a PROCDECL
+    if(lookahead == PROCEDURE) {
+        procdecl();
+    }
 
-
-
-
-
-
-
-
-
-
-
+    // Parse a STATEMENT
+    statement();
 
 
     // bei Blockende : Symboltabelle zurücksetzen
     // actsym = Zeiger auf vorherige Symboltabelle
-
-
-
-
-
+    actsym = oldSymboltable;
 
 
     return;        // end block
@@ -589,9 +571,6 @@ Schnittstelle:
 	bei korrektem Ende:		nächstes Eingabesymbol befindet sich in lookahead
 
 */
-
-
-
 void program()
 {
 
