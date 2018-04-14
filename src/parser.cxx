@@ -441,40 +441,89 @@ Schnittstelle:
 */
 void constdecl()
 {
-    st_entry *neu, *found;
+    st_entry *neu = new st_entry;
+    neu->token = KONST;
+    neu->subsym = actsym;
 
     if (tracesw)
     {
         trace << "\n Zeile:" << lineno << "Konstantendeklaration:";
     }
 
-    // auf const muss IDENT folgen
+    // CONSTDECL starts with 'const'
+    if(lookahead != CONST) {
+        errortext("Found constant declaration and expected key word 'const'.");
+    }
 
 
+    // Parse identifier declaration at least once:
+    //                  IDENT '=' INTNUMBER {',' IDENT '=' INTNUMBER } *
+    do {
+
+        // auf const muss IDENT folgen
+        lookahead = nextsymbol();   // read IDENT
+        if(lookahead == ID) {
+            st_entry *found = lookup(idname);
+            if(found == NULL) {
+                // IDENT not in symtable
+                neu->name = idname;
+            }
+            else {
+                // IDENT is already in symbol table
+                error(34);  // Redeclaration error
+            }
+        }
+        else {
+            error(13); // Expected identifier
+        }
 
 
+        // Parse '=' (EQ)
+        lookahead = nextsymbol();
+        if(lookahead == EQ) {
+            /* '=' (EQ) gefunden --> okay */
+        }
+        else if (lookahead == ASS) {
+            error(1);   // Error: Expected '=' instead of ':='
+        } else if (lookahead != EQ) {
+            error(3);   // Expected '=' after IDENT
+        }
 
 
+        // Parse NUMBER
+        lookahead = nextsymbol();
+        if (lookahead == INTNUM) {
+            /* Int-Zahl (INTNUMBER) gefunden --> okay */
+            neu->wertaddr = num;    // Assign inter value
+        } else if (lookahead == REALNUM) {
+            errortext("There are no real constants, only integer is allowed.");
+        } else {
+            // Neither INTNUM nor REALNUM
+            error(2);   // expected integer constant after '='
+        }
+
+        // Read next symbol
+        lookahead = nextsymbol();
+
+    // Parse next constant separated with ',' (KOMMA)
+    } while (lookahead == KOMMA);
 
 
+    // Parse ';'
+    if(lookahead == SEMICOLON) {
+        /* ; (SEMICOLON) gefunden --> okay */
+    }
+    else {
+        error(5);
+    }
 
+    // TODO What to do with new symbol table entry
+    // symtable...
 
-
-
-
-
-
-
-
-
-
-
-
-
+    // All right => Read next symbol
+    lookahead = nextsymbol();
 
     return;        // end constdecl
-
-
 }
 
 
