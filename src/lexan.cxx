@@ -340,7 +340,7 @@ int readNumber() {
     string number = "";
 
     int numIntDigits = 0;
-    bool isReal = true;
+    bool isReal = false;
     int numRealDigits = 0;
     while (isValidNumberTerminal(actchar)) {
 
