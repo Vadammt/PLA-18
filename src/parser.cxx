@@ -392,46 +392,50 @@ void vardecl()
         errortext("Found variable declaration and expected key word 'var'.");
     }
 
+    // Parse identifier declaration at least once:
+    //                  IDENT '=' INTNUMBER {',' IDENT '=' INTNUMBER } *
+    do {
 
-    // nach var muss Identifikator folgen
-    lookahead = nextsymbol();   // read IDENT
-    if(lookahead == ID) {
-        st_entry *found = lookup(idname);
-        if(found == NULL) {
-            // IDENT not in symtable
-            neu->name = idname;
+        // nach var muss Identifikator folgen
+        lookahead = nextsymbol();   // read IDENT
+        if (lookahead == ID) {
+            st_entry *found = lookup(idname);
+            if (found == NULL) {
+                // IDENT not in symtable
+                neu->name = idname;
+            } else {
+                // IDENT is already in symbol table
+                error(34);  // Redeclaration error
+            }
+        } else {
+            error(13); // Expected identifier
         }
-        else {
-            // IDENT is already in symbol table
-            error(34);  // Redeclaration error
+
+
+        // Parse ':' (EQ)
+        lookahead = nextsymbol();
+        if (lookahead == COLON) {
+            /* ':' (COLON) gefunden --> okay */
+        } else if (lookahead != COLON) {
+            error(3);   // Expected '=' after IDENT
         }
-    }
-    else {
-        error(13); // Expected identifier
-    }
 
 
-    // Parse ':' (EQ)
-    lookahead = nextsymbol();
-    if(lookahead == COLON) {
-        /* ':' (COLON) gefunden --> okay */
-    }
-    else if (lookahead != COLON) {
-        error(3);   // Expected '=' after IDENT
-    }
+        // Parse TYP
+        lookahead = nextsymbol();
+        if (lookahead == INT) {
+            neu->token = INTIDENT;
+        } else if (lookahead == REAL) {
+            neu->token = REALIDENT;
+        } else {
+            error(36);
+        }
 
+        // Read next symbol
+        lookahead = nextsymbol();
 
-    // Parse TYP
-    lookahead = nextsymbol();
-    if(lookahead == INT) {
-        neu->token = INTIDENT;
-    }
-    else if(lookahead == REAL) {
-        neu->token = REALIDENT;
-    }
-    else {
-        error(36);
-    }
+        // Parse next variable separated with ',' (KOMMA)
+    }while (lookahead == KOMMA);
 
 
     // Parse ';'
