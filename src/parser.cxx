@@ -379,7 +379,7 @@ Schnittstelle:
 */
 void vardecl()
 {
-    st_entry *neu, *found;
+    st_entry *neu = new st_entry;
 
     if (tracesw)
     {
@@ -387,31 +387,63 @@ void vardecl()
     }
 
 
+    // CONSTDECL starts with 'var'
+    if(lookahead != VAR) {
+        errortext("Found variable declaration and expected key word 'var'.");
+    }
+
+
     // nach var muss Identifikator folgen
+    lookahead = nextsymbol();   // read IDENT
+    if(lookahead == ID) {
+        st_entry *found = lookup(idname);
+        if(found == NULL) {
+            // IDENT not in symtable
+            neu->name = idname;
+        }
+        else {
+            // IDENT is already in symbol table
+            error(34);  // Redeclaration error
+        }
+    }
+    else {
+        error(13); // Expected identifier
+    }
 
 
+    // Parse ':' (EQ)
+    lookahead = nextsymbol();
+    if(lookahead == COLON) {
+        /* ':' (COLON) gefunden --> okay */
+    }
+    else if (lookahead != COLON) {
+        error(3);   // Expected '=' after IDENT
+    }
 
 
+    // Parse TYP
+    lookahead = nextsymbol();
+    if(lookahead == INT) {
+        neu->token = INTIDENT;
+    }
+    else if(lookahead == REAL) {
+        neu->token = REALIDENT;
+    }
+    else {
+        error(36);
+    }
 
 
+    // Parse ';'
+    if(lookahead == SEMICOLON) {
+        /* ; (SEMICOLON) gefunden --> okay */
+    }
+    else {
+        error(5);   // Missing SEMICOLON
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // TODO What to do with new symbol table entry
+    // symtable...
 
 
     return;    // ende vardecl
@@ -485,7 +517,8 @@ void constdecl()
         }
         else if (lookahead == ASS) {
             error(1);   // Error: Expected '=' instead of ':='
-        } else if (lookahead != EQ) {
+        }
+        else if (lookahead != EQ) {
             error(3);   // Expected '=' after IDENT
         }
 
@@ -495,9 +528,11 @@ void constdecl()
         if (lookahead == INTNUM) {
             /* Int-Zahl (INTNUMBER) gefunden --> okay */
             neu->wertaddr = num;    // Assign inter value
-        } else if (lookahead == REALNUM) {
+        }
+        else if (lookahead == REALNUM) {
             errortext("There are no real constants, only integer is allowed.");
-        } else {
+        }
+        else {
             // Neither INTNUM nor REALNUM
             error(2);   // expected integer constant after '='
         }
@@ -514,7 +549,7 @@ void constdecl()
         /* ; (SEMICOLON) gefunden --> okay */
     }
     else {
-        error(5);
+        error(5);   // Missing SEMICOLON
     }
 
     // TODO What to do with new symbol table entry
