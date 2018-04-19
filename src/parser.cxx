@@ -359,6 +359,58 @@ void procdecl()
     }
 
 
+    // PROCDECL 	::=		{procedure IDENT ';' BLOCK ';' }*
+
+    while (lookahead == PROCEDURE) {
+
+        // PROCDECL starts with 'procedure'
+        if (lookahead != PROCEDURE) {
+            errortext("Found procedure declaration and expected key word 'procedure'.");
+        }
+
+
+        // Procedure IDENT
+        lookahead = nextsymbol();   // read IDENT
+        if(lookahead == ID) {
+            st_entry *found = lookup(idname);
+            if(found == NULL) {
+                // IDENT not in symtable
+                neu->name = idname;
+            }
+            else {
+                // IDENT is already in symbol table
+                error(34);  // Redeclaration error
+            }
+        }
+        else {
+            error(13); // Expected identifier
+        }
+
+
+        // Parse ';' (SEMICOLON)
+        lookahead = nextsymbol();
+        if (lookahead == SEMICOLON) {
+            /* ':' (COLON) gefunden --> okay */
+        }
+        else if(lookahead == KOMMA) {
+                errortext("Procedure declaration and block end with ';'.");
+        }
+        else if (lookahead != SEMICOLON) {
+            error(5);   // Expected '=' after IDENT
+        }
+
+
+        // Parse BLOCK
+        lookahead = nextsymbol();
+        symtable *newSym = create_newsym(); // Create new symbol table for BLOCK
+        block(newSym);                      // Parse BLOCK with its own symbol table.
+
+
+        // Read next symbol (for next loop)
+        lookahead = nextsymbol();
+    }
+
+
     return;   // end procdecl
 }
 
