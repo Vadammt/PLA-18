@@ -412,7 +412,7 @@ void vardecl()
         }
 
 
-        // Parse ':' (EQ)
+        // Parse ':' (COLON)
         lookahead = nextsymbol();
         if (lookahead == COLON) {
             /* ':' (COLON) gefunden --> okay */
@@ -446,8 +446,8 @@ void vardecl()
         error(5);   // Missing SEMICOLON
     }
 
-    // TODO What to do with new symbol table entry
-    // symtable...
+    // Insert into symtable...
+    insert(neu->token);
 
 
     return;    // ende vardecl
@@ -556,8 +556,8 @@ void constdecl()
         error(5);   // Missing SEMICOLON
     }
 
-    // TODO What to do with new symbol table entry
-    // symtable...
+    // Insert into symtable
+    insert(neu->token);
 
     // All right => Read next symbol
     lookahead = nextsymbol();
