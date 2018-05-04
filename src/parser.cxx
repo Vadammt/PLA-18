@@ -285,6 +285,7 @@ Schnittstelle:
 	bei korrektem Ende:		nächstes Eingabesymbol befindet sich in lookahead
 
 */
+
 void statement()
 {
     st_entry *found;        // Zeiger auf ST-Eintrag
@@ -296,7 +297,141 @@ void statement()
     }
 
 
-    // Überprüfung des aktuellen lex. Symbols
+    switch(lookahead){
+
+        case ID :
+            // Procedure IDENT
+            if(lookahead == ID) {
+                // Found identifier in symtable
+                st_entry *found = lookup(idname);
+
+                // Check IDENT type (variable or const/proc)
+                if(found->token == INTIDENT || found->token == REALIDENT) {
+
+                    /*
+                     * IDENT is an INT or REAL variable -> Okay!
+                     */
+
+
+                    // Parse ASS ":="
+                    lookahead = nextsymbol();
+                    if(lookahead == ASS) {
+
+                        // Parse EXPRESSION
+                        lookahead = nextsymbol();
+                        exp();
+
+                    }
+                    else {
+                        // Not an ":="
+                        error(12);   // Expected ':=' after IDENT
+                    }
+
+                }
+                else if(found->token == PROC || found->token == KONST) {
+                    // IDENT is a procedure or constant
+                    error(11);  // Keine Zuweisung an Konstanten oder Prozeduren zulässig
+                }
+                else {
+                    // IDENT is not in symbol table
+                    error(10);  // IDENT not defined
+                }
+            }
+            else {
+                // lookahead != ID
+                error(13); // Expected identifier
+            }
+
+            break;
+        case CALL:
+
+            lookahead = nextsymbol();
+            if(lookahead == ID){
+                if(lookahead == PROC ) {
+                    // IDENT is a PROC -> OK
+
+                } else{
+                    errortext("Expected PROC!");
+                }
+
+
+
+            }
+            else{
+                // lookahead != ID
+                error(10); // Expected identifier
+            }
+
+            break;
+
+
+        case BEGIN:
+
+            do{
+                lookahead = nextsymbol();
+                statement();
+
+
+            }while(lookahead == SEMICOLON);
+
+            if(lookahead == END){
+
+            }
+            else{
+                error(16); // END expected
+            }
+            break;
+
+
+
+
+        case IF:
+
+            lookahead = nextsymbol();
+
+            condition();
+
+            if(lookahead == THEN){
+                lookahead = nextsymbol();
+                statement();
+
+            } else{
+                error(15); //THEN expected
+            }
+
+            lookahead = nextsymbol();
+            if(lookahead == ELSE){
+                lookahead = nextsymbol();
+                statement();
+            }
+            else if(lookahead == FI){
+
+            }
+            else{
+                error(39);  // FI not found
+            }
+            break;
+
+        case WHILE:
+
+            lookahead = nextsymbol();
+            condition();
+
+            if (lookahead == DO){
+                lookahead = nextsymbol();
+                statement();
+            }
+            else{
+                error(17); // expected DO
+            }
+            break;
+
+        default:
+            error(30); // Statement not found
+            break;
+    }
+
+
 
 
 
@@ -348,10 +483,7 @@ Schnittstelle:
 */
 void procdecl()
 {
-    st_entry *neu, *found;          // Zeiger auf ST-Eintrag
-
-    symtable *neusym;        // Zeiger auf Symboltabelle
-
+    st_entry *neu;
 
     if (tracesw)
     {
@@ -373,9 +505,10 @@ void procdecl()
         lookahead = nextsymbol();   // read IDENT
         if(lookahead == ID) {
             st_entry *found = lookup(idname);
-            if(found == NULL) {
+            if(found != NULL) {
                 // IDENT not in symtable
-                neu->name = idname;
+
+                neu = insert(PROC);
             }
             else {
                 // IDENT is already in symbol table
@@ -400,10 +533,25 @@ void procdecl()
         }
 
 
+
+
         // Parse BLOCK
         lookahead = nextsymbol();
         symtable *newSym = create_newsym(); // Create new symbol table for BLOCK
+        newSym->precsym = actsym;           // Set pointer to presym
         block(newSym);                      // Parse BLOCK with its own symbol table.
+
+
+        // Parse ';' (SEMICOLON)
+        if (lookahead == SEMICOLON) {
+            /* ':' (COLON) gefunden --> okay */
+        }
+        else if(lookahead == KOMMA) {
+            errortext("Procedure declaration and block end with ';'.");
+        }
+        else if (lookahead != SEMICOLON) {
+            error(5);   // Expected '=' after IDENT
+        }
 
 
         // Read next symbol (for next loop)
@@ -431,8 +579,6 @@ Schnittstelle:
 */
 void vardecl()
 {
-    st_entry *neu = new st_entry;
-
     if (tracesw)
     {
         trace << "\n Zeile:" << lineno << "Variablendeklaration:";
@@ -452,9 +598,8 @@ void vardecl()
         lookahead = nextsymbol();   // read IDENT
         if (lookahead == ID) {
             st_entry *found = lookup(idname);
-            if (found == NULL) {
-                // IDENT not in symtable
-                neu->name = idname;
+            if (found != NULL) {
+                // IDENT not in symtable -> OK.
             } else {
                 // IDENT is already in symbol table
                 error(34);  // Redeclaration error
@@ -476,9 +621,9 @@ void vardecl()
         // Parse TYP
         lookahead = nextsymbol();
         if (lookahead == INT) {
-            neu->token = INTIDENT;
+            st_entry *neu = insert(INTIDENT);
         } else if (lookahead == REAL) {
-            neu->token = REALIDENT;
+            st_entry *neu = insert(REALIDENT);
         } else {
             error(36);
         }
@@ -498,9 +643,7 @@ void vardecl()
         error(5);   // Missing SEMICOLON
     }
 
-    // Insert into symtable...
-    insert(neu->token);
-
+    lookahead = nextsymbol();
 
     return;    // ende vardecl
 
@@ -529,9 +672,7 @@ Schnittstelle:
 */
 void constdecl()
 {
-    st_entry *neu = new st_entry;
-    neu->token = KONST;
-    neu->subsym = actsym;
+    st_entry *neu = insert(KONST);
 
     if (tracesw)
     {
@@ -592,6 +733,7 @@ void constdecl()
             // Neither INTNUM nor REALNUM
             error(2);   // expected integer constant after '='
         }
+
 
         // Read next symbol
         lookahead = nextsymbol();

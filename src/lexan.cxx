@@ -38,16 +38,16 @@ bool isWhiteSpace(char c);
 
 /*
 Um Bezeichner von reservierten Symbolene unterscheiden zu können,
-wird eine Tabelle reservierte Worte verwendet (restable). 
+wird eine Tabelle reservierte Worte verwendet (restable).
 
-Die Tabelle enthält Einträge für jedes Schlüsselwort, bestehend aus 
+Die Tabelle enthält Einträge für jedes Schlüsselwort, bestehend aus
 dem Schlüsselwort selbst und dem zugehörigen Tokentyp (Codierung vgl. global.h):
 
 Bei Erkennen eines möglichen Bezeichners wird zuerst die Tabelle
-der reservierten Symbole durchsucht (lookforres); 
-wird ein Schlüsselwort gefunden, liefert lookforres den dem Schlüsselwort 
+der reservierten Symbole durchsucht (lookforres);
+wird ein Schlüsselwort gefunden, liefert lookforres den dem Schlüsselwort
 zugeordneten Tokentyp; sonst 0. Bei Ergebnis 0 liegt dann tatsächlich ein
-Bezeichner vor. 
+Bezeichner vor.
 */
 
 /**
@@ -145,34 +145,34 @@ void initlexan()
 /**** zentrale Funktion zum Lesen des nächsten lexikalischen Symbols ***************/
 /*****  identifiziert nächstes lexikalisches Symbol der Eingabe **********/
 
-/***** WICHTIG!!!!!   
+/***** WICHTIG!!!!!
 		Bei Aufruf von nextsymbol muss  sich das nächste Eingabezeichen bereits in actchar befinden
 
 *******/
 
 
-/**    liefert Codierung des nächsten Symbols (token): 
+/**    liefert Codierung des nächsten Symbols (token):
 
 		- Konstante:				token == INTNUM und Wert der Konstanten in Variable num
 									token == REALNUM und Wert in realnum
-		- Bezeichner:				token == ID  und Zeiger auf Name in idname 
-		- Schlüsselwort:			token == Tokentyp des reservierten Symbols nach 
-									Suche in restable 
-		- Operatoren,Sonderzeichen :entsprechende Token 
+		- Bezeichner:				token == ID  und Zeiger auf Name in idname
+		- Schlüsselwort:			token == Tokentyp des reservierten Symbols nach
+									Suche in restable
+		- Operatoren,Sonderzeichen :entsprechende Token
 
 **/
 
 
-/** 
+/**
  * zentrale Funktion zum Lesen des nächsten lexikalischen Symbols
  * identifiziert nächstes lexikalisches Symbol der Eingabe
- * 
+ *
  * <b>WICHTIG!!!!!</b>
  *         Bei Aufruf von nextsymbol muss  sich das nächste Eingabezeichen bereits in actchar befinden
- *         
- *         
- * @return liefert Codierung des nächsten Symbols (token): 
- * 
+ *
+ *
+ * @return liefert Codierung des nächsten Symbols (token):
+ *
  * <ul>
  *      <li> <b>Konstante:</b>                  <code>token == INTNUM</code> und Wert der Konstanten in Variable num <br/>
  *                                              <code>token == REALNUM</code> und Wert in realnum <br/></li>
