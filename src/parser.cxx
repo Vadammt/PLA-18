@@ -379,9 +379,11 @@ void statement()
                 lookahead = nextsymbol();
                 statement();
             }
-            else if (lookahead == FI) {
-                lookahead = nextsymbol();
 
+            // Close the IF-statement with FI
+            if (lookahead == FI) {
+                // All right-> IF-THEN-[ELSE]-FI done
+                lookahead = nextsymbol();
             }
             else {
                 error(39);  // /*39*/  " fi fehlt"
@@ -456,7 +458,7 @@ void procdecl()
             }
         }
 
-    // Parse next procedure
+        // Parse next procedure
     } while (lookahead == PROCEDURE);
 
     if (lookahead == SEMICOLON) {
@@ -590,7 +592,7 @@ void constdecl()
             }
         }
 
-    // Parse next constant
+        // Parse next constant
     } while (lookahead == KOMMA);
 
     // Constants declaration must end with a SEMICOLON
