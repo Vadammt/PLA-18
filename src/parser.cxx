@@ -52,14 +52,12 @@ int factor()
 
             lookahead = nextsymbol();
             exp();
-            if (lookahead == KLZU)
-            {
+            if (lookahead == KLZU) {
                 // korrekt ; nächstes Symbol lesen --> Ende
                 lookahead = nextsymbol();
             }
-            else
-            {
-                error(27);
+            else {
+                error(27);  // /*27*/   "kein Faktor: Name oder Konstante oder ( E) "
             } // kein Faktor
             break;
 
@@ -86,9 +84,10 @@ int factor()
             found = lookup(idname);
 
 
-            if (found == NULL)
+            if (found == NULL) {
                 /* nicht gefunden --> Fehler: Id nicht deklariert*/
-                error(10);
+                error(10);  // /*10*/   "Identifikator nicht deklariert"
+            }
 
             else    // Id in ST gefunden ; Art prüfen
 
@@ -112,7 +111,7 @@ int factor()
 
                     case PROC:    // Name einer Prozedur in
                         // Factor nicht erlaubt
-                        error(20); // --> exit
+                        error(20);  // /*20*/   "Prozedurname in Ausdruck nicht erlaubt",
                         // break;
 
                 } // endswitch (kind)
@@ -126,7 +125,7 @@ int factor()
             break;
 
         default:    // kein korrekter Faktor
-            error(27);
+            error(27);  // /*27*/   "kein Faktor: Name oder Konstante oder ( E) "
     }    // endswitch (lookahead)
 
     return (0);
@@ -256,10 +255,9 @@ int condition()
             break;
 
         default: // kein relationaler Operator
-            error(19);
+            error(19);  // /*19*/   "Vergleichsoperator erwartet",
     }
-    if (typ_left != typ_right)
-    {
+    if (typ_left != typ_right) {
         errortext("Typen der Operanden nicht kompatibel");
     }
 
@@ -297,7 +295,8 @@ void statement()
     }
 
 
-    switch(lookahead){
+    switch (lookahead)
+    {
 
         case ID :
             // Procedure IDENT
@@ -305,7 +304,7 @@ void statement()
             found = lookup(idname);
 
             // Check IDENT type (variable or const/proc)
-            if(found->token == INTIDENT || found->token == REALIDENT) {
+            if (found->token == INTIDENT || found->token == REALIDENT) {
 
                 /*
                  * IDENT is an INT or REAL variable -> Okay!
@@ -329,12 +328,12 @@ void statement()
             lookahead = nextsymbol();
             found = lookup(idname);
 
-            if(found->token == PROC){
+            if (found->token == PROC) {
                 lookahead = nextsymbol();
-                }
-            else{
+            }
+            else {
                 // lookahead != ID
-                error(10); // Expected identifier
+                error(10);  // /*10*/   "Identifikator nicht deklariert"
             }
 
             break;
@@ -342,24 +341,22 @@ void statement()
 
         case BEGIN:
 
-            do{
+            do {
                 lookahead = nextsymbol();
                 statement();
 
 
-            }while(lookahead == SEMICOLON);
+            } while (lookahead == SEMICOLON);
 
-            if(lookahead == END){
+            if (lookahead == END) {
                 lookahead = nextsymbol();
 
 
             }
-            else{
-                error(16); // END expected
+            else {
+                error(16);  // /*16*/   "end oder ';' erwartet "
             }
             break;
-
-
 
 
         case IF:
@@ -368,25 +365,26 @@ void statement()
 
             condition();
 
-            if(lookahead == THEN){
+            if (lookahead == THEN) {
                 lookahead = nextsymbol();
                 statement();
 
-            } else{
-                error(15); //THEN expected
+            }
+            else {
+                error(15);  // /*15*/   "then erwartet"
             }
 
 
-            if(lookahead == ELSE){
+            if (lookahead == ELSE) {
                 lookahead = nextsymbol();
                 statement();
             }
-            else if(lookahead == FI){
+            else if (lookahead == FI) {
                 lookahead = nextsymbol();
 
             }
-            else{
-                error(39);  // FI not found
+            else {
+                error(39);  // /*39*/  " fi fehlt"
             }
             break;
 
@@ -395,21 +393,19 @@ void statement()
             lookahead = nextsymbol();
             condition();
 
-            if (lookahead == DO){
+            if (lookahead == DO) {
                 lookahead = nextsymbol();
                 statement();
             }
-            else{
-                error(17); // expected DO
+            else {
+                error(17);  // /*17*/   "do erwartet "
             }
             break;
 
         default:
-            error(30); // Statement not found
+            error(30);  // /*30*/   "Statement erwartet"
             break;
     }
-
-
 
 
     return;    // end statement
@@ -435,35 +431,35 @@ void procdecl()
 {
     st_entry *neu;
 
-    if (tracesw)
-    {
+    if (tracesw) {
         trace << "\n Zeile:" << lineno << "Procdeklaration:";
     }
 
 
     // PROCDECL 	::=		{procedure IDENT ';' BLOCK ';' }*
 
-    do{
-
-
+    do  {
+        // Get next symbol
         lookahead = nextsymbol();
 
-        if(lookahead = ID && !lookup_in_actsym(idname)){
-
+        // Assure next symbol is an ID and not defined twice.
+        if (lookahead = ID && !lookup_in_actsym(idname)) {
+            // All right -> create new procedure
             neu = insert(PROC);
             lookahead = nextsymbol();
 
-            if(lookahead == SEMICOLON){
+            // Parse the BLOCK of the procedure
+            if (lookahead == SEMICOLON) {
 
                 lookahead = nextsymbol();
                 block(neu->subsym);
             }
-
-
         }
-    }while(lookahead == PROCEDURE);
 
-    if(lookahead == SEMICOLON){
+    // Parse next procedure
+    } while (lookahead == PROCEDURE);
+
+    if (lookahead == SEMICOLON) {
         lookahead = nextsymbol();
     }
 
@@ -492,16 +488,22 @@ void vardecl()
     if (tracesw) {
         trace << "\n Zeile:" << lineno << "Variablendeklaration:";
     }
-    do{
+
+
+    // Parse several variables
+    do {
+        // Assure next symbol is an ID and not defined twice
         lookahead = nextsymbol();
+        if (lookahead == ID && !lookup_in_actsym(idname)) {
 
-        if (lookahead == ID && !lookup_in_actsym(idname)){
+            // All right -> Parse COLON
             lookahead = nextsymbol();
+            if (lookahead == COLON) {
 
-            if(lookahead == COLON){
+                // All right -> Parse type of variable
                 lookahead = nextsymbol();
-
-                switch(lookahead){
+                switch (lookahead)
+                {
                     case INT:
                         insert(INTIDENT);
                         break;
@@ -510,18 +512,18 @@ void vardecl()
                         insert(REALIDENT);
                         break;
 
-
                     default:
                         error(36);  // /*36*/   "Unzulässiger Typ",
                         break;
                 }
 
-
             }
         }
+
+        // Parsing variables done, expecting KOMMA (next variable) or SEMICOLON (end of vardecl).
         lookahead = nextsymbol();
 
-    }while(lookahead == KOMMA);
+    } while (lookahead == KOMMA);
 
     // Variable declarations must end with a SEMICOLON
     if (lookahead != SEMICOLON) {
@@ -530,8 +532,7 @@ void vardecl()
 
     lookahead = nextsymbol();
 
-    return;    // ende vardecl
-
+    return;    // end vardecl
 }
 
 
@@ -558,28 +559,39 @@ Schnittstelle:
 void constdecl()
 {
 
-    if (tracesw)
-    {
+    if (tracesw) {
         trace << "\n Zeile:" << lineno << "Konstantendeklaration:";
     }
+
+    // Parse several constants
     do {
+        // Assure next symbol is an ID and not defined twice
         lookahead = nextsymbol();
-
         if (lookahead == ID && !lookup_in_actsym(idname)) {
-            lookahead = nextsymbol();
 
+            // All right -> Parse '='
+            lookahead = nextsymbol();
             if (lookahead == EQ) {
+                // All right -> Parse type of constant
                 lookahead = nextsymbol();
 
-                if (lookahead == INTNUM) {
-                    insert(KONST);
-                    lookahead = nextsymbol();
+                switch (lookahead)
+                {
+                    case INTNUM:
+                        insert(KONST);
+                        lookahead = nextsymbol();
+                        break;
+
+                    default:
+                        // Not a vlaid type -> Error
+                        error(38);    // /*38*/   "Keine korrekte reelle Konstante "
                 }
 
             }
-
         }
-    }while (lookahead == KOMMA);
+
+    // Parse next constant
+    } while (lookahead == KOMMA);
 
     // Constants declaration must end with a SEMICOLON
     if (lookahead != SEMICOLON) {
@@ -587,12 +599,6 @@ void constdecl()
     }
 
     lookahead = nextsymbol();
-
-
-
-    // Parse identifier declaration at least once:
-    //                  IDENT '=' INTNUMBER {',' IDENT '=' INTNUMBER } *
-
 
     return;        // end constdecl
 }
@@ -633,39 +639,38 @@ void block(symtable *neuSymboltable)
     /* symtable *neuSymboltable :	Zeiger auf neue ST */
 
 
-    if (tracesw)
-    {
+    if (tracesw) {
         trace << "\n Zeile:" << lineno << "Block";
     }
 
     // actsym auf neue Symboltabelle setzen
-    //symtable *oldSymboltable = actsym;
     neuSymboltable->precsym = actsym;
     actsym = neuSymboltable;
 
     // Parse BLOCK
 
     // Check if there is a CONSTDECL
-    if(lookahead == CONST) {
+    if (lookahead == CONST) {
         // There is at least one CONSTDECL (constant declaration)
-
         constdecl();
     }
 
     // Check if there is a VARDECL
-    if(lookahead == VAR) {
+    if (lookahead == VAR) {
         // There is at least one CONSTDECL (constant declaration)
         vardecl();
     }
 
+    // Print symbol from symtable
     printsymtab(actsym);
 
     // Check if there is a PROCDECL
-    if(lookahead == PROCEDURE) {
+    if (lookahead == PROCEDURE) {
+        // There is at least one PROCDECL (procedure declaration)
         procdecl();
     }
 
-    // Parse a STATEMENT
+    // Parse a STATEMENT; Each block must contain a statement
     statement();
 
 
@@ -723,13 +728,13 @@ void program()
     else
     {
         // korrektes Programmende fehlt
-        error(31);
+        error(31);  // /*31*/   "Korrektes Programmende fehlt"
     }
 
     // Dateiende erreicht ?
     if (lookahead != DONE)
     {
-        error(33);
+        error(33);  // /*33*/   "Nach PROGRAM noch Symbole in Eingabedatei"
     } // noch Symbole in Eingabedatei nach RPOGRAM
 
 }    // end program
