@@ -341,17 +341,17 @@ void statement()
 
         case BEGIN:
 
+            // Parse at least one STATEMENT
             do {
                 lookahead = nextsymbol();
                 statement();
 
-
+                // If lookahead = ';' --> Parse next STATEMENT
             } while (lookahead == SEMICOLON);
 
+            // Close BEGIN-STATEMENT
             if (lookahead == END) {
                 lookahead = nextsymbol();
-
-
             }
             else {
                 error(16);  // /*16*/   "end oder ';' erwartet "
@@ -360,21 +360,22 @@ void statement()
 
 
         case IF:
+            // Parse an IF-THEN-ELSE-FI statement
 
+            // Parse the condition
             lookahead = nextsymbol();
-
             condition();
 
+            // Parse the required THEN-statement
             if (lookahead == THEN) {
                 lookahead = nextsymbol();
                 statement();
-
             }
             else {
                 error(15);  // /*15*/   "then erwartet"
             }
 
-
+            // Parse the (optional) ELSE-statement;
             if (lookahead == ELSE) {
                 lookahead = nextsymbol();
                 statement();
