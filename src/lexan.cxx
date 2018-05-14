@@ -10,7 +10,7 @@
 
 #define NORW   14   		/* Zahl der reservierten Worte */ 
 
-#define RWSYMLEN  15		/* Max. L�nge reservierter Symbole */ 
+#define RWSYMLEN  15		/* Max. Länge reservierter Symbole */
 
 
 
@@ -28,21 +28,21 @@ char idname[BSIZE];      /* Name eines Bezeichners ;
 
 char actchar;                /* gelesenes Zeichen */ 
                       
-//ifstream fin;					/* Zu �bersetzende Eingaben */ 
+//ifstream fin;					/* Zu übersetzende Eingaben */
 //ofstream fout;					/* Ausgabedatei */
 	
 
 
-/*  Um Bezeichner von reservierten Symbolene unterscheiden zu k�nnen,
+/*  Um Bezeichner von reservierten Symbolene unterscheiden zu können,
 wird eine Tabelle reservierte Worte verwendet (restable). 
 
-Die Tabelle enth�lt Eintr�ge f�r jedes Schl�sselwort, bestehend aus 
-dem Schl�sselwort selbst und dem zugeh�rigen Tokentyp (Codierung vgl.global.h):
+Die Tabelle enthält Einträge für jedes Schlüsselwort, bestehend aus
+dem Schlüsselwort selbst und dem zugehörigen Tokentyp (Codierung vgl.global.h):
 
-Bei Erkennen eines m�glichen Bezeichners wird zuerst die Tabelle
+Bei Erkennen eines möglichen Bezeichners wird zuerst die Tabelle
 der reservierten Symbole durchsucht (lookforres); 
-wird ein Schl�sselwort gefunden, liefert lookforres den dem Schl�sselwort 
-zugeordneten Tokentyp; sonst 0. Bei Ergebnis 0 liegt dann tats�chlich ein
+wird ein Schlüsselwort gefunden, liefert lookforres den dem Schlüsselwort
+zugeordneten Tokentyp; sonst 0. Bei Ergebnis 0 liegt dann tatsächlich ein
 Bezeichner vor. 
 */ 
 
@@ -55,7 +55,7 @@ Bezeichner vor.
 struct ressw 
 
 { char ressymbol [RWSYMLEN];			/* Symbol */             
-  int token;							/* zugeh�riger Tokentyp */ 
+  int token;							/* zugehöriger Tokentyp */
 } ;
 
 
@@ -89,7 +89,7 @@ struct ressw
 
 int lookforres( char *s)
 
-/* Sucht in Tabelle reservierter Worte nach s und liefert zugeh�rigen Token
+/* Sucht in Tabelle reservierter Worte nach s und liefert zugehörigen Token
    falls gefunden,
    sonst 0 
 */ 
@@ -143,21 +143,21 @@ void initlexan()
 /*******************************************************************************/
 
 
-/**** zentrale Funktion zum Lesen des n�chsten lexikalischen Symbols ***************/ 
-/*****  identifiziert n�chstes lexikalisches Symbol der Eingabe **********/
+/**** zentrale Funktion zum Lesen des nächsten lexikalischen Symbols ***************/
+/*****  identifiziert nächstes lexikalisches Symbol der Eingabe **********/
 
 /***** WICHTIG!!!!!   
-		Bei Aufruf von nextsymbol muss  sich das n�chste Eingabezeichen bereits in actchar befinden
+		Bei Aufruf von nextsymbol muss  sich das nächste Eingabezeichen bereits in actchar befinden
 
 *******/ 
 
 
-/**    liefert Codierung des n�chsten Symbols (token): 
+/**    liefert Codierung des nächsten Symbols (token):
 
 		- Konstante:				token == INTNUM und Wert der Konstanten in Variable num
 									token == REALNUM und Wert in realnum
 		- Bezeichner:				token == ID  und Zeiger auf Name in idname 
-		- Schl�sselwort:			token == Tokentyp des reservierten Symbols nach 
+		- Schlüsselwort:			token == Tokentyp des reservierten Symbols nach
 									Suche in restable 
 		- Operatoren,Sonderzeichen :entsprechende Token 
 
@@ -185,7 +185,7 @@ int isDigit ()
        if(zahl[--i] == '.')
         {
             //error(38);
-            return 0;                                   // Error einf�gen!!!
+            return 0;                                   // Error einfügen!!!
         }
         
         else if(isRealnum){
@@ -226,7 +226,7 @@ int nextsymbol ()
 
 {
 	int token;  
-			/* lokaler Puffer f�r Eingabezeichen */
+			/* lokaler Puffer für Eingabezeichen */
 
 
 
@@ -234,7 +234,7 @@ int nextsymbol ()
 	{ 
 
 		if ( actchar== ' ' || actchar== '\t')
-			/*Blank und Tab in Ausgabedatei kopieren und �berlesen */ 
+			/*Blank und Tab in Ausgabedatei kopieren und überlesen */
 			{	fout.put(actchar);
 				fin.get(actchar);
 				
@@ -242,7 +242,7 @@ int nextsymbol ()
 
 
 		else if (actchar== '\n'  ||  actchar == '\r')  
-			/* Newline in Ausgabedatei kopieren, �berlesen/entfernen, Zeilennummer erh�hen */ 
+			/* Newline in Ausgabedatei kopieren, überlesen/entfernen, Zeilennummer erhöhen */
 			{ fout.put(actchar);
 			  fin.get(actchar);
 			  lineno++;
