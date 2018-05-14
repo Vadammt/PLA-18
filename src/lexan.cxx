@@ -334,8 +334,7 @@ int nextsymbol ()
                     case '$':   fin.get(actchar);
                                 return (PROGEND);
 
-            
-				//	default: 	error (32); 
+					default: 	error (32);     // /*32*/   " unzulässiges Eingabezeichen (Scanner)"
 							
 				
 				} /* end-switch */ 
