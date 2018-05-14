@@ -512,7 +512,7 @@ void vardecl()
 
 
                     default:
-                        error(1);
+                        error(36);  // /*36*/   "Unzulässiger Typ",
                         break;
                 }
 
@@ -523,8 +523,9 @@ void vardecl()
 
     }while(lookahead == KOMMA);
 
-    if(lookahead != SEMICOLON){
-        error(1);
+    // Variable declarations must end with a SEMICOLON
+    if (lookahead != SEMICOLON) {
+        error(5);   // /* 5*/   " ';' oder ',' fehlt ",
     }
 
     lookahead = nextsymbol();
@@ -580,8 +581,9 @@ void constdecl()
         }
     }while (lookahead == KOMMA);
 
-    if(lookahead != SEMICOLON) {
-        error(1);
+    // Constants declaration must end with a SEMICOLON
+    if (lookahead != SEMICOLON) {
+        error(5);   // /* 5*/   " ';' oder ',' fehlt ",
     }
 
     lookahead = nextsymbol();
