@@ -1,8 +1,9 @@
-	const c = 6;
+	const c = 6, a = 100;
 	var n: int , f: real, e:real;
-	procedure test;
-		var i : int, k:real;
-		begin
+    procedure test;
+		var i : int, k:real, e : int;
+
+        begin
 			f := k+f;
 			i := 2;
 			while i <=n do
@@ -14,10 +15,16 @@
 						i := i+1
 					 end
 		end;
-		
+
+    procedure xyz;
+        f := 1.1;
 	begin
-		
-		n := c;
+		if n = 0
+		then
+		    n := c
+        else
+            n := a
+        fi;
 		call test
 	end$
 	
