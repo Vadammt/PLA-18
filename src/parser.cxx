@@ -668,7 +668,7 @@ void block(symtable *neuSymboltable)
     printsymtab(actsym);
 
     // Check if there is a PROCDECL
-    if (lookahead == PROCEDURE) {
+    while (lookahead == PROCEDURE) {    // 0 or many PROCEDURES
         // There is at least one PROCDECL (procedure declaration)
         procdecl();
     }
