@@ -304,7 +304,10 @@ void statement()
             found = lookup(idname);
 
             // Check IDENT type (variable or const/proc)
-            if (found->token == INTIDENT || found->token == REALIDENT) {
+            if(found == NULL) {
+                error(10);  // /*10*/   "Identifikator nicht deklariert",
+            }
+            else if (found->token == INTIDENT || found->token == REALIDENT) {
 
                 /*
                  * IDENT is an INT or REAL variable -> Okay!
@@ -319,6 +322,9 @@ void statement()
                     lookahead = nextsymbol();
                     exp();
                 }
+            }
+            else {
+                error(11);  // /*11*/   "Keine Zuweisungen an Konstante oder Prozedurnamen zulässig",
             }
             break;
 
@@ -522,6 +528,9 @@ void vardecl()
 
             }
         }
+        else {
+            error(34);  // /*34*/   "Identifikator doppelt deklariert",
+        }
 
         // Parsing variables done, expecting KOMMA (next variable) or SEMICOLON (end of vardecl).
         lookahead = nextsymbol();
@@ -663,9 +672,6 @@ void block(symtable *neuSymboltable)
         // There is at least one CONSTDECL (constant declaration)
         vardecl();
     }
-
-    // Print symbol from symtable
-    printsymtab(actsym);
 
     // Check if there is a PROCDECL
     while (lookahead == PROCEDURE) {    // 0 or many PROCEDURES
